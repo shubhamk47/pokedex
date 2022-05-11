@@ -7,6 +7,7 @@ const SearchPokemon = () => {
     const [loading, setLoading] = useState(true);
     const [pokemonInfo, setPokemonInfo] = useState();
     const [errorResponse, setErrorResponse] = useState(null);
+    const [imageUrl, setImageUrl] = useState(null);
     const handleChange = (e) => {
         const value = e.target.value;
         setPokemonName(value);
@@ -14,13 +15,14 @@ const SearchPokemon = () => {
 
     const searchPokemonApi = async (e) => {
         e.preventDefault();
-        console.log(pokemonName);
-        if(pokemonName.trim() !== ""){
+        if(pokemonName != null && pokemonName.trim() !== ""){
             setLoading(true);
             try{
-                const response = await PokemonService.searchPokemon(pokemonName);
+                const response = await PokemonService.searchPokemon(pokemonName.trim());
                 setErrorResponse(null);
                 setPokemonInfo(response.data);
+                const imgUrl = await PokemonService.getPageSource(String(response.data.id).padStart(3,"0"), pokemonName.charAt(0).toUpperCase() + pokemonName.slice(1) + ".png");
+                setImageUrl(imgUrl.data);
             }catch(error){
                 if(error.response.status === 404){
                     setErrorResponse("You seem to have mispelled the name!");
@@ -46,7 +48,8 @@ const SearchPokemon = () => {
                 </div>
                 {!loading && errorResponse === null && (
                     <div className='flex items-center justify-center'>
-                        <img src={pokemonInfo.sprites['front_default']} alt="pokemon" width="300px" height="300px"/> 
+                        {/* <img src={pokemonInfo.sprites['front_default']} alt="pokemon" width="300px" height="300px"/>  */}
+                        <img src={imageUrl} alt="pokemon" width="300px" height="300px"/> 
                         <h1 className='font-bold text-5xl' style={{textTransform: 'capitalize'}}>{pokemonInfo.name}</h1>
                     </div>
                 )}
