@@ -6,6 +6,7 @@ const SearchPokemon = () => {
     const [pokemonName, setPokemonName] = useState();
     const [loading, setLoading] = useState(true);
     const [pokemonInfo, setPokemonInfo] = useState();
+    const [errorResponse, setErrorResponse] = useState(null);
     const handleChange = (e) => {
         const value = e.target.value;
         setPokemonName(value);
@@ -13,14 +14,23 @@ const SearchPokemon = () => {
 
     const searchPokemonApi = async (e) => {
         e.preventDefault();
-        setLoading(true);
-        try{
-            const response = await PokemonService.searchPokemon(pokemonName);
-            setPokemonInfo(response.data);
-        }catch(error){
-            console.log(error);
+        console.log(pokemonName);
+        if(pokemonName.trim() !== ""){
+            setLoading(true);
+            try{
+                const response = await PokemonService.searchPokemon(pokemonName);
+                setErrorResponse(null);
+                setPokemonInfo(response.data);
+            }catch(error){
+                if(error.response.status === 404){
+                    setErrorResponse("You seem to have mispelled the name!");
+                }
+            }
+            setLoading(false);
+        }else{
+            alert("Enter a name!");
         }
-        setLoading(false);
+        
     }
 
     return (
@@ -34,11 +44,17 @@ const SearchPokemon = () => {
                     <input type="text" name="pokemonName" value={ pokemonName } onChange={(e) => handleChange(e)} className='border p-2 mx-2'></input>
                     <button className='rounded text-white font-semibold bg-green-400 hover:bg-green-700 py-2 px-6' onClick={searchPokemonApi}>Search</button>
                 </div>
-                {!loading && (
-                <div className='flex items-center'>
-                   <img src={pokemonInfo.sprites['front_default']} alt="pokemon" width="300px" height="300px"/> 
-                   <p>{pokemonInfo.name}</p>
-                </div>)}
+                {!loading && errorResponse === null && (
+                    <div className='flex items-center justify-center'>
+                        <img src={pokemonInfo.sprites['front_default']} alt="pokemon" width="300px" height="300px"/> 
+                        <h1 className='font-bold text-5xl' style={{textTransform: 'capitalize'}}>{pokemonInfo.name}</h1>
+                    </div>
+                )}
+                {errorResponse && (
+                    <div className='flex items-center justify-center'>
+                        <h1 className='font-bold text-3xl'>{errorResponse}</h1>
+                    </div>
+                )}
             </div>
         </div>
     );
