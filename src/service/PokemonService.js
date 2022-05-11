@@ -5,6 +5,10 @@ class PokemonService{
     searchPokemon(pokemonName){
         return axios.get(POKEMON_API_BASE_URL + pokemonName);
     }
+
+    // getPageSource(pokemonId, pokemonName){
+    //     return axios.get("https://bulbapedia.bulbagarden.net/wiki/File:" + pokemonId + pokemonName);
+    // }
 }
 
 export default new PokemonService();
