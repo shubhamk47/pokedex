@@ -11,8 +11,7 @@ CORS(app, resources={r"/": {"origins": "*"}})
 def index(pokemon):
     page = requests.get("https://bulbapedia.bulbagarden.net/wiki/File:" + pokemon)
     soup = BeautifulSoup(page.content, 'html.parser')
-    print(soup.find("div", class_="fullMedia").find("a"))
-    return soup.find("div", class_="fullMedia").find("a")["href"]
+    return soup.find("div", class_="fullImageLink").find("img")["src"]
 
 if __name__=='__main__':
     app.run(host='localhost', port=8080, debug=True)

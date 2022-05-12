@@ -8,7 +8,6 @@ class PokemonService{
     }
 
     getPageSource(pokemonId, pokemonName){
-        console.log(pokemonName);
         return axios.post("http://localhost:8080/" +  pokemonId + pokemonName);
     }
 }
