@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect  } from 'react';
 import PokemonService from '../service/PokemonService';
 import '../assets/css/loading_spinner.css';
 import LoadingSpinner from './LoadingSpinner';
@@ -10,11 +10,16 @@ const SearchPokemon = () => {
     const [pokemonInfo, setPokemonInfo] = useState(null);
     const [errorResponse, setErrorResponse] = useState(null);
     const [imageUrl, setImageUrl] = useState(null);
+    const [bColor, setBColor] = useState(0,0,0);
 
     const handleChange = (e) => {
         const value = e.target.value;
         setPokemonName(value);
     }
+
+    useEffect(() => {
+        // Update the document title using the browser API
+    });
 
     const searchPokemonApi = async (e) => {
         e.preventDefault();
@@ -26,7 +31,8 @@ const SearchPokemon = () => {
                 setErrorResponse(null);
                 setPokemonInfo(response.data);
                 const imgUrl = await PokemonService.getPageSource(String(response.data.id).padStart(3,"0"), name.charAt(0).toUpperCase() + name.slice(1) + ".png");
-                setImageUrl(imgUrl.data);
+                setImageUrl(imgUrl.data.url);
+                setBColor(imgUrl.data.color);
             }catch(error){
                 if(error.response.status === 404){
                     setErrorResponse("You seem to have mispelled the name!");
@@ -40,8 +46,8 @@ const SearchPokemon = () => {
     }
 
     return (
-        <div className='flex max-w-2xl mx-auto shadow border-b items-center justify-center'>
-            <div className='items-center justify-center px-8 py-8'>
+        <div className='flex max-w-full min-h-screen mx-auto shadow border-b items-center justify-center' style={{ background: loading ? 'rgb(255, 255, 255)' : `rgb(${bColor})` }}>
+            <div className='items-center justify-center px-8 py-8' id="pokemonDataContiner">
                 <div className='font-thin text-2xl tracking-wider'>
                     Search Pokémon
                 </div>
@@ -52,18 +58,22 @@ const SearchPokemon = () => {
                 </div>
                 {loading && (<LoadingSpinner  />)}
                 {!loading && pokemonInfo !== null && errorResponse === null && (
-                        <><div className='flex items-center justify-center'>
-                            <h1 className='text-5xl tracking-wider font-thin' style={{ textTransform: 'capitalize'}}>{ pokemonInfo.name }   #{pokemonInfo.id}</h1>
+                        <div id="img-container" style={{color: 'white'}}>
+                            <div className='flex items-center justify-center'>
+                                <h1 className='text-5xl tracking-wider font-bold font-mono' style={{ textTransform: 'capitalize'}}>{ pokemonInfo.name }   #{pokemonInfo.id}</h1>
+                            </div>
+                            <div className='flex items-center justify-center'>
+                                <img src={imageUrl} alt="pokemon" id="pokemonImg" width="300px" height="300px"/>     
+                            </div>
                         </div>
-                        <div className='flex items-center justify-center'>
-                            <img src={imageUrl} alt="pokemon" width="300px" height="300px"/> 
-                        </div></>
+                       
                 )}
                 {errorResponse && (
                     <div className='flex items-center justify-center'>
                         <h1 className='font-bold text-2xl'>{errorResponse}</h1>
                     </div>
                 )}
+                 {/* {!loading && pokemonInfo !== null && errorResponse === null && PokemonService.getAvgColor({imageUrl})} */}
             </div>
         </div>
         
