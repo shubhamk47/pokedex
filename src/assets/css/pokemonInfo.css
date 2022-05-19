@@ -1,0 +1,124 @@
+.display-background{
+    height: 100vh;
+    width: 100vw;
+}
+
+.display-search-box{
+    /* border: 2px solid black; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 10vh;
+}
+
+.display-search-box-heading{
+    font-weight: lighter;
+    font-size: xx-large;
+    letter-spacing: 3px;
+}
+
+.display-search-box-input{
+    border-radius: 5px;
+    padding:  8px 8px;
+    border: solid gray 1px;
+    width: 25em;
+    height: 3em;
+    font-weight: lighter;
+
+}
+
+.display-search-box-button{
+    color: whitesmoke;
+    font-weight: bold;
+    background-color: yellowgreen;
+    padding: 8px 16px;
+    border-radius: 5px;
+    border: 0;
+    margin-left: 1em;
+    height: 3em;
+}
+
+.display-search-box-button:hover{
+    background-color: green;
+    cursor: pointer;
+}
+
+.pokemon-info-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 90vh;
+    letter-spacing: 3px;
+}
+
+.pokemon-info-container-info{
+    border-radius: 8px;
+    background-color: white;
+    color: black;
+    font-size: 15px;
+    padding: 6px 12px;
+    width: fit-content;
+}
+
+.pokemon-info-heading-stats-item-div {
+    margin-left: 1em;
+}
+
+.stats{
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    padding: 0;
+}
+
+.pokemon-info-heading-stats-items{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    border-left: 5px solid rgba(255, 255, 255, 0.3);
+}
+
+.pokemon-info-container-div{
+    height: 600px;
+    margin-bottom: 100px;
+    width: 300px;
+}
+
+.pokemon-hw-details{
+    padding-left: 6em;
+    letter-spacing: 0px;
+}
+
+h2{
+    font-weight: 500;
+}
+
+.pokemon-info-heading{
+    font-size: 50px;
+    width: fit-content;
+    padding-bottom: 12rem;
+    margin-right: 12rem;
+    margin-bottom: 0;
+    margin-top: 0;
+}
+
+.pokemon-info-heading-id{
+    margin: 0;
+    letter-spacing: 0px;
+}
+
+.pokemon-info-image{
+    /* margin-right: 9rem; */
+    margin-left: 1em;
+    margin-right: 1em;
+}
+
+.pokemon-info-heading-stats{
+    font-size: 50px;
+    margin: 0;
+    padding-bottom: 20px;
+}
+
+.pokemon-info-stats-container{
+    margin-left: 50px;
+}
