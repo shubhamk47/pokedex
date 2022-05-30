@@ -15,8 +15,10 @@ const App = () => {
     const [pokemonInfo, setPokemonInfo] = useState(null);
     const [errorResponse, setErrorResponse] = useState(null);
     const [bColor, setBColor] = useState(0,0,0);
-    const ids = [];
+    var ids = [];
     const dispatch = useDispatch();
+    const [uMover, setUMover] = useState(5);
+    const [lMover, setLMover] = useState(0);
     const handleChange = (e) => {
         const value = e.target.value;
         setPokemonName(value);
@@ -25,12 +27,10 @@ const App = () => {
 
         try {
             if(id in pokemonList){
-                console.log("Getting from store");
                 dispatch(updateCurrent(id));
                 setPokemonInfo(pokemonList[id]);   
-                setBColor(pokemonList[id].bColor); 
+                setBColor(pokemonList[id].bColor);
             }else{
-                console.log("Getting from net");
                 const response = await pokemonService.getPokemonById(id? id : 1);
                 const imgUrl = await pokemonService.getPageSource(String(response.data.id).padStart(3,"0"), response.data.name.charAt(0).toUpperCase() + response.data.name.slice(1) + ".png");
                 response.data.imgUrl = imgUrl.data.url;
@@ -39,6 +39,9 @@ const App = () => {
                 setBColor(imgUrl.data.color);
                 dispatch(add(response.data));
             }
+
+            setLMover(id ? [1,2].includes(id) ? 1 : id - 2 : 1 );
+            setUMover(id ? [1,2].includes(id) ? 5 : id + 2 : 5 );
             setLoading(false);
         } catch (error) {
             if(error.response.status === 404){
@@ -74,15 +77,31 @@ const App = () => {
         }
     }
     
-    
-
-    if(pokemonInfo === null)
-        initComponent();
-
-    if(current !== 0){
-        for(var i=(pokemonList[current].id-5 <= 0 ? 1 : pokemonList[current].id-4); i < (pokemonList[current].id + 5); i++){
-            ids.push(i);
+    const updateNav = () => {
+        console.log("lower - ", lMover);
+        console.log("upper - ", uMover);
+        if(current !== 0){
+            ids = [];
+            for(var i=lMover; i <= uMover; i++){
+                ids.push(i);
+            }
         }
+    }
+
+    if(pokemonInfo === null){
+        initComponent();
+    }
+
+    pokemonList && current && updateNav();  
+
+    const downArrow = () => {
+        setLMover(lMover + 2);
+        setUMover(uMover + 2);
+    }
+
+    const upArrow = () => {
+        setLMover([-1,0].includes(lMover - 2) ? 1 : lMover - 2);
+        setUMover([-1,0].includes(lMover - 2) ? 5 : uMover - 2);
     }
     
     return (
@@ -125,7 +144,8 @@ const App = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="page-container">    
+                        <div className="page-container">
+                            <i className='arrow up' onClick={upArrow}></i>
                             { ids.map(id =>{
                                 if(id === pokemonList[current].id){
                                     return <h3 style={{ textDecoration: 'underline 3px' }}>{id}</h3>
@@ -136,6 +156,7 @@ const App = () => {
                                     }}>{id}</h3>
                                 }
                             }) }
+                            <i className='arrow down' onClick={downArrow}></i>
                         </div>
                     </div>
                 )}
